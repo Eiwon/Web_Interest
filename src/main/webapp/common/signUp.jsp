@@ -11,6 +11,7 @@
 	<form action="Sign.do" method="POST">
 		<div>아이디
 			<input type="text" name="userId" id="userId" required>
+			<button onclick="checkDup()">중복 체크</button>
 		</div>
 		<div>비밀번호
 			<input type="password" name="pw" id="pw" required>
@@ -31,5 +32,28 @@
 		<input type="submit" name="type" value="회원가입">
 	</form>
 
+	<script type="text/javascript">
+		let userId = document.getElementById("userId");
+		
+		function checkDup(){
+			let xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function(){
+				if(this.readyState == 4 && this.status == 200){
+					let jsonRes = JSON.parse(this.responseText);
+					console.log(jsonRes);
+					if(jsonRes.userId == 'null'){
+						alert("사용할 수 없는 아이디입니다.");
+					}else{
+						alert("사용 가능한 아이디입니다.");
+					}
+				}
+			};
+			
+			xhttp.open("POST", "Sign.do", true);
+			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+			xhttp.send("type=checkDup&userId=" + userId.value);
+		}
+	
+	</script>
 </body>
 </html>

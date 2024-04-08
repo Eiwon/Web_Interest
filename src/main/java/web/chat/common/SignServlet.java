@@ -34,9 +34,10 @@ public class SignServlet extends HttpServlet {
 		String type = request.getParameter("type");
 		System.out.println("SignServlet doPost() request type : " + type);
 		
+		String userId = request.getParameter("userId");
+		String pw = request.getParameter("pw");
+		
 		if(type.equals("로그인")) {
-			String userId = request.getParameter("userId");
-			String pw = request.getParameter("pw");
 			
 			String checked = memberDao.checkUserId(userId, pw);
 			
@@ -47,6 +48,10 @@ public class SignServlet extends HttpServlet {
 			}
 			
 		}else if(type.equals("회원가입")) {
+			
+		}else if(type.equals("checkDup")) {
+			String checkedId = memberDao.haveUserId(userId);
+			response.getWriter().write("{\"userId\":\"" + checkedId + "\"}");
 			
 		}
 	

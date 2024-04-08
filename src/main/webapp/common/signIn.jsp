@@ -10,7 +10,9 @@
 	<!-- 로그인 화면 -->
 	<h1>	로그인	</h1>
 	<form action="Sign.do" method="POST">
+		<p>ID</p>
 		<input type="text" name="userId" required>
+		<p>비밀번호</p>
 		<input type="password" name="pw" required>
 		<input type="submit" name="type" value="로그인">
 	</form>
