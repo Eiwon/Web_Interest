@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import web.chat.resource.MemberDAO;
 import web.chat.resource.MemberDAOImple;
 
-@WebServlet("/commoon/Sign.do")
+@WebServlet("/common/Sign.do")
 public class SignServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private MemberDAO memberDao = null;
@@ -25,7 +25,7 @@ public class SignServlet extends HttpServlet {
 		
 		if(type.equals("signUp")) {
 			// 회원가입 페이지로 이동
-			response.sendRedirect("/signUp");
+			response.sendRedirect("signUp.jsp");
 		}
 		
 	} // end doGet

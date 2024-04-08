@@ -8,7 +8,7 @@
 </head>
 <body>
 	<h1>회원 가입</h1>
-	<form action="/Sign.do" method="POST">
+	<form action="Sign.do" method="POST">
 		<div>아이디
 			<input type="text" name="userId" id="userId" required>
 		</div>
