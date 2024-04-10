@@ -25,7 +25,7 @@ public interface MemberQuery {
 	// 패스워드 확인
 	public static final String SELECT_CHECK_USERID
 		= "SELECT " + COL_USERID + " FROM " + TABLE_MEMBER
-		+ "WHERE " + COL_USERID + " = ? AND " + COL_PW + " = ?";
+		+ " WHERE " + COL_USERID + " = ? AND " + COL_PW + " = ?";
 	
 	// 회원 정보 변경
 	public static final String UPDATE_MEMBER

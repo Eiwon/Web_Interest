@@ -14,7 +14,7 @@
 		<input type="text" name="userId" required>
 		<p>비밀번호</p>
 		<input type="password" name="pw" required>
-		<input type="submit" name="type" value="로그인">
+		<input type="submit" name="type" value="logIn">
 	</form>
 	<a href="Sign.do?type=signUp">회원가입</a>
 	

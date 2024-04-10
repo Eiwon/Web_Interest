@@ -16,9 +16,6 @@
 		<div>비밀번호
 			<input type="password" name="pw" id="pw" required>
 		</div>
-		<div>비밀번호 확인
-			<input type="password" name="pwChk" id="pwChk" required> 
-		</div>
 		<div>이름
 			<input type="text" name="name" id="name" required>
 		</div>
@@ -29,7 +26,7 @@
 			<input type="text" name="phone" id="phone" required>
 		</div>
 		
-		<input type="submit" name="type" value="회원가입">
+		<input type="submit" name="type" value="join">
 	</form>
 
 	<script type="text/javascript">
@@ -42,9 +39,9 @@
 					let jsonRes = JSON.parse(this.responseText);
 					console.log(jsonRes);
 					if(jsonRes.userId == 'null'){
-						alert("사용할 수 없는 아이디입니다.");
-					}else{
 						alert("사용 가능한 아이디입니다.");
+					}else{
+						alert("사용할 수 없는 아이디입니다.");
 					}
 				}
 			};
