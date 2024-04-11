@@ -27,9 +27,7 @@ public class MemberDAOImple implements MemberDAO, MemberQuery{
 		ResultSet rs = null;
 		
 		try {
-			DriverManager.registerDriver(new OracleDriver());
-			pstmt = DriverManager.getConnection(CON_URL, CON_ID, CON_PW)
-					.prepareStatement(SELECT_HAVE_USERID);
+			pstmt = ConManager.getConnection().prepareStatement(SELECT_HAVE_USERID);
 			pstmt.setString(1, userId);
 			
 			rs = pstmt.executeQuery();
@@ -38,10 +36,10 @@ public class MemberDAOImple implements MemberDAO, MemberQuery{
 				result = rs.getString(1);
 			System.out.println("MemberDAOImple haveUserId result : " + result);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			closeResource(pstmt, rs);
+			ConManager.close(pstmt, rs);
 		}
 		
 		return result;
@@ -54,9 +52,7 @@ public class MemberDAOImple implements MemberDAO, MemberQuery{
 		PreparedStatement pstmt = null;
 		
 		try {
-			DriverManager.registerDriver(new OracleDriver());
-			pstmt = DriverManager.getConnection(CON_URL, CON_ID, CON_PW)
-					.prepareStatement(INSERT_MEMBER);
+			pstmt = ConManager.getConnection().prepareStatement(INSERT_MEMBER);
 			pstmt.setString(1, member.getUserId());
 			pstmt.setString(2, member.getPw());
 			pstmt.setString(3, member.getName());
@@ -67,10 +63,10 @@ public class MemberDAOImple implements MemberDAO, MemberQuery{
 			
 			System.out.println("MemberDAOImple insertMember result : " + result);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			closeResource(pstmt);
+			ConManager.close(pstmt);
 		}
 		
 		return result;
@@ -84,9 +80,8 @@ public class MemberDAOImple implements MemberDAO, MemberQuery{
 		ResultSet rs = null;
 		
 		try {
-			DriverManager.registerDriver(new OracleDriver());
-			pstmt = DriverManager.getConnection(CON_URL, CON_ID, CON_PW)
-					.prepareStatement(SELECT_CHECK_USERID);
+			
+			pstmt = ConManager.getConnection().prepareStatement(SELECT_CHECK_USERID);
 			pstmt.setString(1, userId);
 			pstmt.setString(2, pw);
 			
@@ -96,10 +91,10 @@ public class MemberDAOImple implements MemberDAO, MemberQuery{
 				result = rs.getString(1);
 			System.out.println("MemberDAOImple checkUserId result : " + result);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			closeResource(pstmt, rs);
+			ConManager.close(pstmt, rs);
 		}
 		
 		return result;
@@ -112,9 +107,7 @@ public class MemberDAOImple implements MemberDAO, MemberQuery{
 		PreparedStatement pstmt = null;
 		
 		try {
-			DriverManager.registerDriver(new OracleDriver());
-			pstmt = DriverManager.getConnection(CON_URL, CON_ID, CON_PW)
-					.prepareStatement(UPDATE_MEMBER);
+			pstmt = ConManager.getConnection().prepareStatement(UPDATE_MEMBER);
 			
 			pstmt.setString(1, member.getPw());
 			pstmt.setString(2, member.getName());
@@ -126,10 +119,10 @@ public class MemberDAOImple implements MemberDAO, MemberQuery{
 			
 			System.out.println("MemberDAOImple updateMember result : " + result);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			closeResource(pstmt);
+			ConManager.close(pstmt);
 		}
 		
 		return result;
@@ -142,40 +135,19 @@ public class MemberDAOImple implements MemberDAO, MemberQuery{
 		PreparedStatement pstmt = null;
 		
 		try {
-			DriverManager.registerDriver(new OracleDriver());
-			pstmt = DriverManager.getConnection(CON_URL, CON_ID, CON_PW)
-					.prepareStatement(DELETE_MEMBER);
-			
+			pstmt = ConManager.getConnection().prepareStatement(DELETE_MEMBER);
+
 			pstmt.setString(1, userId);
-			
 			result = pstmt.executeUpdate();
-			
 			System.out.println("MemberDAOImple deleteMember result : " + result);
 			
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			closeResource(pstmt);
+			ConManager.close(pstmt);
 		}
 		
 		return result;
-	}
-	
-	private void closeResource(PreparedStatement pstmt) {
-		try {
-			pstmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void closeResource(PreparedStatement pstmt, ResultSet rs) {
-		try {
-			pstmt.close();
-			rs.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 	
 }

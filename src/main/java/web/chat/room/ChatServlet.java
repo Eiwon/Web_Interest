@@ -3,13 +3,16 @@ package web.chat.room;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
 import javax.websocket.CloseReason;
 import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 @ServerEndpoint("/chatSpace/chatServer")
 public class ChatServlet extends Endpoint{
@@ -27,12 +30,18 @@ public class ChatServlet extends Endpoint{
 		
         session.addMessageHandler(new MessageHandler.Whole<String>() {
              public void onMessage(String text) {
+            	System.out.println("receive msg : " + text);
+            	JSONObject msg = null;
             	try {
-                	for(Session client : clients) {
-                		client.getAsyncRemote().sendText("echo " + text);
+					msg = (JSONObject)new JSONParser().parse(text);
+					System.out.println(msg.get("writer") + ", " + msg.get("content"));
+					for(Session client : clients) {
+						if(client.isOpen()) {
+							client.getAsyncRemote().sendText(text);
+						}
                     }
-				} catch (Exception e) {
-					e.printStackTrace();
+            	} catch (Exception e1) {
+					e1.printStackTrace();
 				}
              }
         });
