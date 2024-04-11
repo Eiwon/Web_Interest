@@ -8,7 +8,7 @@
 </head>
 <body>
 	<h1>회원 가입</h1>
-	<form action="Sign.do" method="POST">
+	<form action="signUp.do" method="POST">
 		<div>아이디
 			<input type="text" name="userId" id="userId" required>
 			<button onclick="checkDup()">중복 체크</button>
@@ -26,7 +26,7 @@
 			<input type="text" name="phone" id="phone" required>
 		</div>
 		
-		<input type="submit" name="type" value="join">
+		<input type="submit">
 	</form>
 
 	<script type="text/javascript">
@@ -46,9 +46,9 @@
 				}
 			};
 			
-			xhttp.open("POST", "Sign.do", true);
+			xhttp.open("POST", "chkDup.do", true);
 			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			xhttp.send("type=checkDup&userId=" + userId.value);
+			xhttp.send("userId=" + userId.value);
 		}
 	
 	</script>

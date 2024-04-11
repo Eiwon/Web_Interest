@@ -1,9 +1,6 @@
 package web.chat.resource;
 
 public interface MemberQuery {
-	public static final String CON_URL = "jdbc:oracle:thin:@localhost:1521:xe";
-	public static final String CON_ID = "scott";
-	public static final String CON_PW = "tiger";
 	
 	public static final String TABLE_MEMBER = "MEMBER";
 	

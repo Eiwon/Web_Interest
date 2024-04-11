@@ -19,12 +19,14 @@
 	<script type="text/javascript">
 		let output = $('#output');
 		let input = $('#input');
+		let userId = '<%=session.getAttribute("userId")%>';
 		
 		let webSocket = new WebSocket("ws://localhost:8080/WebChat/chatSpace/chatServer");
 		
 		webSocket.onmessage = function(e){
+			let msg = JSON.parse(e.data);
 			console.log("receive message : " + e.data);
-			output.append(e.data + "<br>");
+			output.append(msg.writer + " : " + msg.content + "<br>");
 		};
 		
 		webSocket.onopen = function(e){
@@ -32,26 +34,26 @@
 		};
 		
 		webSocket.onclose = function(e){
-			console.log("webSocket close");
+			console.log("webSocket close : " + e);
 		};
 		
 		webSocket.onerror = function(e){
-			console.log("webSocket error");
+			console.log("webSocket error : " + e);
 		};
 		
-		
 		input.keypress(function(e){
-			console.log(e.keyCode);
 			if(e.keyCode == 13){
-				let content = input.val();
-				console.log("key input : " + content);
-				webSocket.send(content);
+				let msg = {
+					"writer" : userId,
+					"content" : input.val()
+				};
+				console.log("msg = " + msg.writer + " : " + msg.content);
+				
+				webSocket.send(JSON.stringify(msg));
 				input.val("");
 			}
 		});
 			
-	
-	
 	</script>
 </body>
 </html>

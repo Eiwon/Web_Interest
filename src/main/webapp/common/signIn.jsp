@@ -9,14 +9,14 @@
 <body>
 	<!-- 로그인 화면 -->
 	<h1>	로그인	</h1>
-	<form action="Sign.do" method="POST">
+	<form action="signIn.do" method="POST">
 		<p>ID</p>
 		<input type="text" name="userId" required>
 		<p>비밀번호</p>
 		<input type="password" name="pw" required>
-		<input type="submit" name="type" value="logIn">
+		<input type="submit">
 	</form>
-	<a href="Sign.do?type=signUp">회원가입</a>
+	<a href="signUp.do">회원가입</a>
 	
 </body>
 </html>
