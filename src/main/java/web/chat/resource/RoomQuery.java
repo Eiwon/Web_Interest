@@ -25,5 +25,4 @@ public interface RoomQuery {
 	// 방 삭제
 	public static final String DELETE_ROOM = "DELETE " + TABLE_ROOM + " WHERE " + ROOM_ID 
 			+ " = ?";
-	
 }

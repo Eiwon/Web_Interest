@@ -8,8 +8,7 @@ public interface RoomDAO {
 	
 	public List<RoomVO> selectAllRoom(int page);
 	
-	public int updateRoom(String roomName, int roomId);
+	public int updateRoomName(String roomName, int roomId);
 	
 	public int deleteRoom(int roomId);
-	
 }

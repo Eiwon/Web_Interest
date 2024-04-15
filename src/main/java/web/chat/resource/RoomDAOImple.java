@@ -2,35 +2,45 @@ package web.chat.resource;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class RoomDAOImple implements RoomDAO, RoomQuery{
 
+	private static RoomDAOImple instance = null;
+	
+	private RoomDAOImple() {};
+	
+	public static RoomDAOImple getInstance() {
+		if(instance == null) {
+			instance = new RoomDAOImple();
+		}
+		return instance;
+	} // end getInstance
+
 	@Override
-	public int insertRoom(RoomVO vo) {
+	public int insertRoom(RoomVO room) {
 		System.out.println("insertRoom()");
+		int result = 0;
 		PreparedStatement pstmt = null;
-		int res = 0;
 		
 		try {
 			pstmt = ConManager.getConnection().prepareStatement(INSERT_ROOM);
-			pstmt.setString(1, vo.getRoomName());
-			pstmt.setString(2, vo.getCreatorId());
+			pstmt.setString(1, room.getRoomName());
+			pstmt.setString(2, room.getCreatorId());
 			
-			res = pstmt.executeUpdate();
-			System.out.println(res + "행 추가 성공");
+			result = pstmt.executeUpdate();
 			
+			System.out.println(result + "행 추가 성공");
+		
 		} catch (Exception e) {
 			System.out.println(e.toString());
-		} finally {
+		}finally {
 			ConManager.close(pstmt);
 		}
-		
-		return res;
-	}
+
+		return result;
+	} // end insertRoom
 
 	@Override
 	public List<RoomVO> selectAllRoom(int page) {
@@ -43,7 +53,7 @@ public class RoomDAOImple implements RoomDAO, RoomQuery{
 			pstmt = ConManager.getConnection().prepareStatement(SELECT_ALL_ROOM);
 			pstmt.setInt(1, (page-1) * 10 + 1);
 			pstmt.setInt(2, page * 10);
-			
+		
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
@@ -61,26 +71,49 @@ public class RoomDAOImple implements RoomDAO, RoomQuery{
 	}
 
 	@Override
-	public int updateRoom(String roomName, int roomId) {
+	public int updateRoomName(String roomName, int roomId) {
+		System.out.println("updateRoom()");
+		int result = 0;
 		PreparedStatement pstmt = null;
-		int res = 0;
 		
 		try {
 			pstmt = ConManager.getConnection().prepareStatement(UPDATE_ROOM_NAME);
 			pstmt.setString(1, roomName);
+			pstmt.setInt(2, roomId);
 			
+			result = pstmt.executeUpdate();
+			
+			System.out.println(result + "행 수정 성공");
+		
 		} catch (Exception e) {
 			System.out.println(e.toString());
-		} finally {
+		}finally {
 			ConManager.close(pstmt);
 		}
-		
-		return res;
+
+		return result;
 	}
 
 	@Override
-	public int deleteRoom(String roomId) {
-		return 0;
+	public int deleteRoom(int roomId) {
+		System.out.println("deleteRoom()");
+		int result = 0;
+		PreparedStatement pstmt = null;
+		
+		try {
+			pstmt = ConManager.getConnection().prepareStatement(DELETE_ROOM);
+			pstmt.setInt(1, roomId);
+			
+			result = pstmt.executeUpdate();
+			
+			System.out.println(result + "행 삭제 성공");
+		
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		}finally {
+			ConManager.close(pstmt);
+		}
+
+		return result;
 	}
-	
 }
