@@ -2,6 +2,7 @@ package web.chat.controller;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,15 +29,26 @@ public class FrontController extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String requestURI = request.getRequestURI();
 		String requestMethod = request.getMethod();
-		
+		System.out.println(requestMethod);
 		PathAnalyzer analyzer = PathAnalyzer.getInstance();
 		analyzer.analyze(requestURI, requestMethod);
 		System.out.println(analyzer.getController());
 		System.out.println(analyzer.getAction());
+		System.out.println(analyzer.getMethod());
 		
+		//Map<String, String[]> map = new HashMap<>(request.getParameterMap());
 		
-		request.getRequestDispatcher("/WEB-INF/common/signIn.jsp").forward(request, response);
+		Controller ctr = ctrMap.get(analyzer.getController());
+		System.out.println(analyzer.getController() + " 컨트롤러 호출");
 		
+		ctr.action(analyzer.getAction(), request, response);
+		
+//		System.out.println("return path : " + result.get("return")[0] + ", return type : " + result.get("return")[1]);
+//		if(result.get("return")[1].equals("send")) {
+//			request.getRequestDispatcher(result.get("return")[0]).forward(request, response);;
+//		}else if(result.get("return")[1].equals("foward")){
+//			request.getRequestDispatcher(result.get("return")[0]).forward(request, response);
+//		}
 		
 		
 		

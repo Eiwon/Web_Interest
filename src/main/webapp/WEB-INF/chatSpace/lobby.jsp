@@ -18,7 +18,7 @@
 		$(document).ready(function(){
 			$.ajax({
 				type : "GET",
-				url : "room",
+				url : "room.do",
 				data : {
 					"type" ; "selectAll"
 				},
@@ -60,7 +60,7 @@
 			
 			$.ajax({
 				type : "POST",
-				url : "room",
+				url : "room.do",
 				data : {
 					"type" : "insert",
 					"roomName" : roomName,

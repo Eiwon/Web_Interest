@@ -1,14 +1,14 @@
 package web.chat.resource;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface RoomDAO {
 	
-	int insertRoom(RoomVO room);
+	public int insertRoom(RoomVO vo);
 	
-	ArrayList<RoomVO> selectRoom();
+	public List<RoomVO> selectAllRoom(int page);
 	
-	int updateRoomName(String roomName);
+	public int updateRoomName(String roomName, int roomId);
 	
-	int deleteRoom(int roomId);
+	public int deleteRoom(int roomId);
 }

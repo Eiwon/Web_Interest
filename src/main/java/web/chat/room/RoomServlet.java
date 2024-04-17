@@ -2,6 +2,7 @@ package web.chat.room;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -15,7 +16,6 @@ import org.json.simple.JSONObject;
 import web.chat.resource.RoomDAOImple;
 import web.chat.resource.RoomVO;
 
-@WebServlet("/chatSpace/room")
 public class RoomServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private RoomDAOImple roomDao = null;
@@ -40,8 +40,11 @@ public class RoomServlet extends HttpServlet {
     // 비동기 : 모든 room 검색 후 반환
 	private void selectGET(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		System.out.println("roomServ selectGet()");
-		
-		ArrayList<RoomVO> list = roomDao.selectRoom();
+		String pageStr = request.getParameter("page");
+		int page = 1;
+		if(pageStr != null)
+			page = Integer.parseInt(pageStr);
+		List<RoomVO> list = roomDao.selectAllRoom(page);
 		
 		JSONArray jsonArray = new JSONArray();
 		
@@ -58,4 +61,11 @@ public class RoomServlet extends HttpServlet {
 		response.getWriter().write(jsonArray.toString());
 		
 	} // end selectGET
+	
+	private void createRoom(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		System.out.println("createRoom()");
+		
+		RoomVO room = new RoomVO(0, request.getParameter("roomName"), request.getParameter("creatorId"), null);
+		
+	}
 }

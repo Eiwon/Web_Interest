@@ -3,6 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <meta charset="EUC-KR">
 <title>SignUp</title>
 </head>
@@ -33,22 +34,20 @@
 		let userId = document.getElementById("userId");
 		
 		function checkDup(){
-			let xhttp = new XMLHttpRequest();
-			xhttp.onreadystatechange = function(){
-				if(this.readyState == 4 && this.status == 200){
-					let jsonRes = JSON.parse(this.responseText);
-					console.log(jsonRes);
-					if(jsonRes.userId == 'null'){
+			$.ajax({
+				type : "POST",
+				url : "idDupChk.do",
+				data : {
+					"userId" : userId
+				},
+				success : function(result){
+					if(result == 'null'){
 						alert("사용 가능한 아이디입니다.");
 					}else{
 						alert("사용할 수 없는 아이디입니다.");
 					}
 				}
-			};
-			
-			xhttp.open("POST", "chkDup.do", true);
-			xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-			xhttp.send("userId=" + userId.value);
+			});
 		}
 	
 	</script>

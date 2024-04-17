@@ -2,7 +2,6 @@ package web.chat.resource;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,42 +43,43 @@ public class RoomDAOImple implements RoomDAO, RoomQuery{
 	} // end insertRoom
 
 	@Override
-	public ArrayList<RoomVO> selectRoom() {
-		System.out.println("selectRoom()");
-		ArrayList<RoomVO> result = new ArrayList<>();
+	public List<RoomVO> selectAllRoom(int page) {
+		System.out.println("selectAllRoom()");
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+		List<RoomVO> result = new ArrayList<>();
 		
 		try {
-			pstmt = ConManager.getConnection().prepareStatement(SELECT_ROOM);
-			
+			pstmt = ConManager.getConnection().prepareStatement(SELECT_ALL_ROOM);
+			pstmt.setInt(1, (page-1) * 10 + 1);
+			pstmt.setInt(2, page * 10);
+		
 			rs = pstmt.executeQuery();
 			
 			while(rs.next()) {
-				result.add(new RoomVO(rs.getInt(1), rs.getString(2), rs.getString(3),
+				result.add(new RoomVO(rs.getInt(1), rs.getString(2), rs.getString(3), 
 						rs.getDate(4)));
 			}
 			
-			System.out.println(result.size() + "행 검색 성공");
-		
 		} catch (Exception e) {
 			System.out.println(e.toString());
-		}finally {
-			ConManager.close(pstmt);
+		} finally {
+			ConManager.close(pstmt, rs);
 		}
 		
 		return result;
-	} // end selectRoom
+	}
 
 	@Override
-	public int updateRoomName(String roomName) {
+	public int updateRoomName(String roomName, int roomId) {
 		System.out.println("updateRoom()");
 		int result = 0;
 		PreparedStatement pstmt = null;
 		
 		try {
-			pstmt = ConManager.getConnection().prepareStatement(UPDATE_ROOM);
+			pstmt = ConManager.getConnection().prepareStatement(UPDATE_ROOM_NAME);
 			pstmt.setString(1, roomName);
+			pstmt.setInt(2, roomId);
 			
 			result = pstmt.executeUpdate();
 			
@@ -116,7 +116,4 @@ public class RoomDAOImple implements RoomDAO, RoomQuery{
 
 		return result;
 	}
-	
-	
-	
 }
