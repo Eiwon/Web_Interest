@@ -12,7 +12,6 @@ import web.chat.resource.MemberDAO;
 import web.chat.resource.MemberDAOImple;
 import web.chat.resource.MemberVO;
 
-@WebServlet({"/common/signUp", "/common/signIn", "/common/idDupChk"})
 public class SignServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String SIGN_URL = "/WebChat/common/";

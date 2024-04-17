@@ -9,7 +9,7 @@
 </head>
 <body>
 	<h1>회원 가입</h1>
-	<form action="signUp" method="POST">
+	<form action="signUp.do" method="POST">
 		<div>아이디
 			<input type="text" name="userId" id="userId" required>
 			<button onclick="checkDup()">중복 체크</button>
@@ -36,7 +36,7 @@
 		function checkDup(){
 			$.ajax({
 				type : "POST",
-				url : "idDupChk",
+				url : "idDupChk.do",
 				data : {
 					"userId" : userId
 				},

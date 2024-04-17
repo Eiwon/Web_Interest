@@ -16,7 +16,6 @@ import org.json.simple.JSONObject;
 import web.chat.resource.RoomDAOImple;
 import web.chat.resource.RoomVO;
 
-@WebServlet("/chatSpace/room")
 public class RoomServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private RoomDAOImple roomDao = null;
@@ -62,4 +61,11 @@ public class RoomServlet extends HttpServlet {
 		response.getWriter().write(jsonArray.toString());
 		
 	} // end selectGET
+	
+	private void createRoom(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		System.out.println("createRoom()");
+		
+		RoomVO room = new RoomVO(0, request.getParameter("roomName"), request.getParameter("creatorId"), null);
+		
+	}
 }
