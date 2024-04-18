@@ -67,5 +67,8 @@ public class RoomServlet extends HttpServlet {
 		
 		RoomVO room = new RoomVO(0, request.getParameter("roomName"), request.getParameter("creatorId"), null);
 		
+		int res = roomDao.insertRoom(room);
+		
+		response.getWriter().write(String.valueOf(res));
 	}
 }

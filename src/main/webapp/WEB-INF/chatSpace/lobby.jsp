@@ -5,12 +5,17 @@
 <head>
 <meta charset="EUC-KR">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<style type="text/css">
+.room{
+	border: 1px solid black;
+}
+</style>
 <title>Lobby</title>
 </head>
 <body>
 	<h2>Lobby</h2>
 	<div id="roomList" style="height: 500px;"></div>
-	<input type="button" value="채팅방 생성" onclick="scanRoomName()">
+	<input type="button" value="채팅방 생성" onclick="createRoom()">
 	
 	<script type="text/javascript">
 		let roomList = $('#roomList');
@@ -18,10 +23,8 @@
 		$(document).ready(function(){
 			$.ajax({
 				type : "GET",
-				url : "room.do",
-				data : {
-					"type" ; "selectAll"
-				},
+				url : "selectAll.do",
+				data : {},
 				success : function(result){
 					refreshRoomList(result);	
 				}
@@ -32,47 +35,58 @@
 		
 		function refreshRoomList(result){
 			let rooms = JSON.parse(result);
-			roomList.html("");
-			
+			let roomsBlock = "";
 			for(x in rooms){
-				let roomBlock = $('<div></div>');
-				let idBlock = $('<div></div>').text('ID : ' + rooms[x].roomId);
-				let nameBlock = $('<div></div>').text(rooms[x].roomName);
-				let creatorBlock = $('<div></div>').text('owner : ' + rooms[x].creatorId);
-				let createdBlock = $('<div></div>').text(rooms[x].createdAt);
-				roomBlock.append(idBlock);
-				roomBlock.append(nameBlock);
-				roomBlock.append(creatorBlock);
-				roomBlock.append(createdBlock);
-				roomList.append(roomBlock);
+				roomsBlock += '<div class="room"><div> ID : ' + 
+				'<span class="roomId">' + rooms[x].roomId + '</span></div>' +
+				'<div>' + rooms[x].roomName + '</div>' +
+				'<div>owner : ' + '<span class="memberId">' + rooms[x].creatorId + '</span></div>' +
+				'<div>' + rooms[x].createdAt + '</div></div>';
 			}
+			roomList.html(roomsBlock);
+			$('.room').click(function(){
+				let roomId = $(this).find('.roomId').text();
+				console.log(roomId);
+				
+				enterRoom(roomId);
+				
+			}); // end room click
+			
 		} // end refreshRoomList
 	
 		function scanRoomName(){
-			let roomName = confirm("방 이름 입력");
+			let roomName = prompt("방 이름 입력");
 			
 			if(roomName != null){
-				createRoom(roomName);
-			}
+				return roomName;
+			}else return null;
 		} // end scanRoomName
 		
-		function createRoom(roomName){
+		function createRoom(){
+			
+			let roomName = scanRoomName();
+			
+			if(roomName == null)
+				return;
 			
 			$.ajax({
 				type : "POST",
-				url : "room.do",
+				url : "createRoom.do",
 				data : {
-					"type" : "insert",
 					"roomName" : roomName,
 					"creatorId" : '<%=session.getAttribute("userId")%>'
 				},
 				success : function(result){
 					let roomId = result;
-					location.href = 'room?roomId=' + roomId;
+					enterRoom(roomId);
 				}
 			}); // end ajax
 			
 		} // end createRoom
+		
+		function enterRoom(roomId){
+			location.href = 'room.do?roomId=' + roomId;
+		} // end enterRoom
 		
 	</script>
 	

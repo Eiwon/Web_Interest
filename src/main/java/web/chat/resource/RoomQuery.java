@@ -4,7 +4,7 @@ public interface RoomQuery {
 	
 	public static final String TABLE_ROOM = "ROOM";
 	
-	public static final String ROOM_ID = "ROOD_ID";
+	public static final String ROOM_ID = "ROOM_ID";
 	public static final String ROOM_NAME = "ROOM_NAME";
 	public static final String CREATOR_ID = "CREATOR_ID";
 	public static final String CREATED_AT = "CREATED_AT";
@@ -12,6 +12,14 @@ public interface RoomQuery {
 	// 방 생성
 	public static final String INSERT_ROOM = "INSERT INTO " + TABLE_ROOM + 
 			" VALUES(ROOM_SEQ.NEXTVAL, ?, ?, SYSDATE)";
+	
+	// 생성된 방 id 조회
+	public static final String SELECT_RECENT_ID = "SELECT " + ROOM_ID + " FROM "
+			+ TABLE_ROOM + " WHERE " + CREATOR_ID + " = ? ORDER BY " + CREATED_AT + " DESC";
+
+	// id로 방 조회
+	public static final String SELECT_BY_ID = "SELECT * FROM " + TABLE_ROOM + 
+			" WHERE " + ROOM_ID + " = ?";
 	
 	// 모든 방 조회
 	public static final String SELECT_ALL_ROOM = "SELECT * FROM (SELECT " + TABLE_ROOM + 

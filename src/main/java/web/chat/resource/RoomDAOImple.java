@@ -58,7 +58,7 @@ public class RoomDAOImple implements RoomDAO, RoomQuery{
 			
 			while(rs.next()) {
 				result.add(new RoomVO(rs.getInt(1), rs.getString(2), rs.getString(3), 
-						rs.getDate(4)));
+						rs.getTimestamp(4)));
 			}
 			
 		} catch (Exception e) {
@@ -114,6 +114,58 @@ public class RoomDAOImple implements RoomDAO, RoomQuery{
 			ConManager.close(pstmt);
 		}
 
+		return result;
+	}
+
+	@Override
+	public int getRecentRoomId(String memberId) {
+		System.out.println("getRecentRoomId()");
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		int result = 0;
+		
+		try {
+			pstmt = ConManager.getConnection().prepareStatement(SELECT_RECENT_ID);
+			pstmt.setString(1, memberId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				result = rs.getInt(1);
+			}
+			
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		} finally {
+			ConManager.close(pstmt, rs);
+		}
+		
+		return result;
+	} // end getRecentRoomId
+
+	@Override
+	public RoomVO selectById(int roomId) {
+		System.out.println("selectById()");
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		RoomVO result = null;
+		
+		try {
+			pstmt = ConManager.getConnection().prepareStatement(SELECT_BY_ID);
+			pstmt.setInt(1, roomId);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				result = new RoomVO(rs.getInt(1), rs.getString(2), rs.getString(3),
+						rs.getTimestamp(4));
+			}
+		} catch (Exception e) {
+			System.out.println(e.toString());
+		} finally {
+			ConManager.close(pstmt, rs);
+		}
+		
 		return result;
 	}
 }

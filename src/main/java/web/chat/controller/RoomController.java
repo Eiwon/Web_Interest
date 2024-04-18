@@ -34,6 +34,8 @@ public class RoomController implements Controller{
 	@Override
 	public void action(String action, HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		System.out.println("enter RoomController");
+		
 		if(action.equals("selectAll")) {
 			selectAll(request, response);
 		}else if(action.equals("createRoom")) {
@@ -44,14 +46,27 @@ public class RoomController implements Controller{
 			deleteRoom(request, response);
 		}else if(action.equals("lobby")) {
 			toLobby(request, response);
+		}else if(action.equals("room")) {
+			toRoom(request, response);
 		}
 		
 	} // end action
 	
+	private void toRoom(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+		System.out.println("toRoom()");
+		int roomId = Integer.parseInt(request.getParameter("roomId"));
+		
+		RoomVO target = roomDao.selectById(roomId);
+		
+		request.setAttribute("roomVO", target);
+		request.getRequestDispatcher("/WEB-INF/chatSpace/room.jsp").forward(request, response);
+		
+	}
+
 	private void toLobby(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		System.out.println("toLobby()");
 		
-		response.sendRedirect("lobby.jsp");
+		request.getRequestDispatcher("/WEB-INF/chatSpace/lobby.jsp").forward(request, response);
 		
 	} // end toLobby
 
@@ -77,11 +92,16 @@ public class RoomController implements Controller{
 
 	private void createRoom(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		System.out.println("createRoom()");
-		
-		RoomVO room = new RoomVO(0, request.getParameter("roomName"), request.getParameter("creatorId"), null);
+		String creatorId = request.getParameter("creatorId");
+		RoomVO room = new RoomVO(0, request.getParameter("roomName"), creatorId, null);
 		
 		int res = roomDao.insertRoom(room);
-		response.getWriter().write(String.valueOf(res));
+		int recentRoomId = 0;
+		if(res == 1) {
+			recentRoomId = roomDao.getRecentRoomId(creatorId);
+		}
+		
+		response.getWriter().write(String.valueOf(recentRoomId));
 	} // end createRoom
 
 	private void selectAll(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
