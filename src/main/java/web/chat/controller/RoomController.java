@@ -15,6 +15,7 @@ import web.chat.resource.Controller;
 import web.chat.resource.RoomDAO;
 import web.chat.resource.RoomDAOImple;
 import web.chat.resource.RoomVO;
+import web.chat.resource.Router;
 
 public class RoomController implements Controller{
 	
@@ -32,9 +33,9 @@ public class RoomController implements Controller{
 	}
 
 	@Override
-	public void action(String action, HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	public Router action(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> attr) throws ServletException, IOException {
 		System.out.println("enter RoomController");
+		Router router = null;
 		
 		if(action.equals("selectAll")) {
 			selectAll(request, response);
@@ -50,6 +51,7 @@ public class RoomController implements Controller{
 			toRoom(request, response);
 		}
 		
+		return router;
 	} // end action
 	
 	private void toRoom(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{

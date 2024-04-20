@@ -9,5 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface Controller {
 	
-	public void action(String action, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
+	public Router action(String action, HttpServletRequest request, 
+			HttpServletResponse response, Map<String, Object> attr) 
+					throws ServletException, IOException;
 }

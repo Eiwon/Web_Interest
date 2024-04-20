@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import web.chat.resource.Controller;
+import web.chat.resource.Router;
 
 @WebServlet("*.do")
 public class FrontController extends HttpServlet {
@@ -41,18 +42,10 @@ public class FrontController extends HttpServlet {
 		Controller ctr = ctrMap.get(analyzer.getController());
 		System.out.println(analyzer.getController() + " 컨트롤러 호출");
 		
-		ctr.action(analyzer.getAction(), request, response);
-		
-//		System.out.println("return path : " + result.get("return")[0] + ", return type : " + result.get("return")[1]);
-//		if(result.get("return")[1].equals("send")) {
-//			request.getRequestDispatcher(result.get("return")[0]).forward(request, response);;
-//		}else if(result.get("return")[1].equals("foward")){
-//			request.getRequestDispatcher(result.get("return")[0]).forward(request, response);
-//		}
-		
-		
-		
-		
+		Map<String, Object> attr = new HashMap<>();
+		Router router = ctr.action(analyzer.getAction(), request, response, attr);
+		router.route(request, response, attr);
+
 		
 	}
 

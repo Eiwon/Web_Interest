@@ -41,7 +41,9 @@
 					"userId" : userId
 				},
 				success : function(result){
-					if(result == 'null'){
+					console.log(result);
+					let res = JSON.parse(result);
+					if(res.checkedId == 'null'){
 						alert("사용 가능한 아이디입니다.");
 					}else{
 						alert("사용할 수 없는 아이디입니다.");

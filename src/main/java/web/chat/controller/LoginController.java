@@ -12,6 +12,7 @@ import web.chat.resource.Controller;
 import web.chat.resource.MemberDAO;
 import web.chat.resource.MemberDAOImple;
 import web.chat.resource.MemberVO;
+import web.chat.resource.Router;
 
 public class LoginController implements Controller{
 
@@ -36,8 +37,7 @@ public class LoginController implements Controller{
 	}
 	
 	@Override
-	public void action(String action, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//System.out.println("action : " + action);
+	public Router action(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> attr) throws ServletException, IOException {
 		String path = null;
 		String method = request.getMethod();
 		
@@ -46,32 +46,33 @@ public class LoginController implements Controller{
     			// 회원가입 페이지로 이동
     			System.out.println("get");
     			path = SIGN_URL + SIGN_UP + EXT;
-    			request.getRequestDispatcher(path).forward(request, response);
-    			
+    			return new Router(path, "forward");
     		}else if(method.equals("POST")) {
     			System.out.println("post");
-    			registerMember(request, response);
+    			return registerMember(request, response);
     		} // end signUp post
     	}else if(action.equals(SIGN_IN)) {
     		if(method.equals("GET")) {
     			//로그인 페이지로 이동
     			path = SIGN_URL + SIGN_IN + EXT;
-    			request.getRequestDispatcher(path).forward(request, response);
+    			return new Router(path, "forward");
     		}else if(method.equals("POST")) {
-    			signIn(request,response);
+    			return signIn(request,response);
     		} // end signIn post
     	}else if(action.equals(CHK_DUP)) {
-    		idDupChk(request, response);
+    		return idDupChk(request, response, attr);
     	}
+		return null;
 	}
-	private void idDupChk(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	private Router idDupChk(HttpServletRequest request, HttpServletResponse response, Map<String, Object> attr) throws IOException{
     	String userId = request.getParameter("userId");
     	String checkedId = memberDao.haveUserId(userId);
-    	
-		response.getWriter().write(checkedId);
+    	attr.put("checkedId", checkedId);
+    	return new Router(null, "write");
+		//response.getWriter().write(checkedId);
 	} // end idDupChk
 
-	private void signIn(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private Router signIn(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
     	String userId = request.getParameter("userId");
     	String pw = request.getParameter("pw");
     	String checked = memberDao.checkUserId(userId, pw);
@@ -83,15 +84,17 @@ public class LoginController implements Controller{
 			sess.setAttribute("userId", userId);
 			sess.setMaxInactiveInterval(600);
 			path = "../room/lobby.do";
-			response.sendRedirect(path);
+			return new Router(path, "send");
+			//response.sendRedirect(path);
 		}else {
 			// 로그인 실패
 			path = SIGN_URL + SIGN_IN + EXT;
-			request.getRequestDispatcher(path).forward(request, response);
+			return new Router(path, "forward");
+			//request.getRequestDispatcher(path).forward(request, response);
 		}
 	} // end signIn
 
-	private void registerMember(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private Router registerMember(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
     	System.out.println("registerMember()");
     	String userId = request.getParameter("userId");
     	String pw = request.getParameter("pw");
@@ -108,6 +111,7 @@ public class LoginController implements Controller{
 		}else {
 			path = SIGN_URL + SIGN_UP + EXT;
 		}
-		request.getRequestDispatcher(path).forward(request, response);
+		return new Router(path, "forward");
+		//request.getRequestDispatcher(path).forward(request, response);
     } // end registerMember
 }
