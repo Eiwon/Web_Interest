@@ -1,17 +1,13 @@
 package web.chat.controller;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import web.chat.resource.Controller;
+import web.chat.resource.RequestProperty;
 import web.chat.resource.RoomDAO;
 import web.chat.resource.RoomDAOImple;
 import web.chat.resource.RoomVO;
@@ -33,85 +29,79 @@ public class RoomController implements Controller{
 	}
 
 	@Override
-	public Router action(String action, HttpServletRequest request, HttpServletResponse response, Map<String, Object> attr) throws ServletException, IOException {
+	public Router action(RequestProperty rp, Map<String, Object> attr) {
 		System.out.println("enter RoomController");
-		Router router = null;
+		String action = rp.getAction();
+		Map<String, Object> paraMap = rp.getParaMap();
 		
 		if(action.equals("selectAll")) {
-			selectAll(request, response);
+			return selectAll(paraMap, attr);
 		}else if(action.equals("createRoom")) {
-			createRoom(request, response);
+			return createRoom(paraMap, attr);
 		}else if(action.equals("updateName")) {
-			updateName(request, response);
+			return updateName(paraMap, attr);
 		}else if(action.equals("deleteRoom")) {
-			deleteRoom(request, response);
+			return deleteRoom(paraMap, attr);
 		}else if(action.equals("lobby")) {
-			toLobby(request, response);
+			return toLobby();
 		}else if(action.equals("room")) {
-			toRoom(request, response);
+			return toRoom(paraMap, attr);
 		}
 		
-		return router;
+		return null;
 	} // end action
 	
-	private void toRoom(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private Router toRoom(Map<String, Object> paraMap, Map<String, Object> attr) {
 		System.out.println("toRoom()");
-		int roomId = Integer.parseInt(request.getParameter("roomId"));
-		
+		int roomId = (int)paraMap.get("roomId");
+		String path = "/WEB-INF/chatSpace/room.jsp";
 		RoomVO target = roomDao.selectById(roomId);
-		
-		request.setAttribute("roomVO", target);
-		request.getRequestDispatcher("/WEB-INF/chatSpace/room.jsp").forward(request, response);
-		
-	}
+		attr.put("roomVO", target);
+		return new Router(path, "forward");
+	} // end toRoom
 
-	private void toLobby(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private Router toLobby(){
 		System.out.println("toLobby()");
-		
-		request.getRequestDispatcher("/WEB-INF/chatSpace/lobby.jsp").forward(request, response);
-		
+		String path = "/WEB-INF/chatSpace/lobby.jsp";
+		return new Router(path, "forward");
 	} // end toLobby
 
-	private void deleteRoom(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private Router deleteRoom(Map<String, Object> paraMap, Map<String, Object> attr) {
 		System.out.println("deleteRoom()");
 		
-		int roomId = Integer.parseInt(request.getParameter("roomId"));
+		int roomId = (int)(paraMap.get("roomId"));
 		int res = roomDao.deleteRoom(roomId);
-		
-		response.getWriter().write(String.valueOf(res));
-		
+		attr.put("result", res);
+		return new Router(null, "write");
 	} // end deleteRoom
 
-	private void updateName(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private Router updateName(Map<String, Object> paraMap, Map<String, Object> attr) {
 		System.out.println("updateName()");
-		int roomId = Integer.parseInt(request.getParameter("roomId"));
-		String roomName = request.getParameter("roomName");
+		int roomId = (int)(paraMap.get("roomId"));
+		String roomName = (String)paraMap.get("roomName");
 		
 		int res = roomDao.updateRoomName(roomName, roomId);
-		response.getWriter().write(String.valueOf(res));
-		
+		attr.put("result", res);
+		return new Router(null, "write");
 	} // end updateName
 
-	private void createRoom(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private Router createRoom(Map<String, Object> paraMap, Map<String, Object> attr) {
 		System.out.println("createRoom()");
-		String creatorId = request.getParameter("creatorId");
-		RoomVO room = new RoomVO(0, request.getParameter("roomName"), creatorId, null);
+		String creatorId = (String)paraMap.get("creatorId");
+		RoomVO room = new RoomVO(0, (String)paraMap.get("roomName"), creatorId, null);
 		
 		int res = roomDao.insertRoom(room);
-		int recentRoomId = 0;
-		if(res == 1) {
-			recentRoomId = roomDao.getRecentRoomId(creatorId);
-		}
+		int recentRoomId = (res == 1) ? roomDao.getRecentRoomId(creatorId) : 0;
 		
-		response.getWriter().write(String.valueOf(recentRoomId));
+		attr.put("result", res);
+		attr.put("roomId", recentRoomId);
+		return new Router(null, "write");
 	} // end createRoom
 
-	private void selectAll(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+	private Router selectAll(Map<String, Object> paraMap, Map<String, Object> attr) {
 		System.out.println("roomServ selectGet()");
-		String pageStr = request.getParameter("page");
-		int page = 1;
-		if(pageStr != null)
-			page = Integer.parseInt(pageStr);
+		String pageStr = (String)paraMap.get("page");
+		int page = (pageStr == null) ? 1 : Integer.parseInt(pageStr);
 		List<RoomVO> list = roomDao.selectAllRoom(page);
 		
 		JSONArray jsonArray = new JSONArray();
@@ -125,8 +115,8 @@ public class RoomController implements Controller{
 			
 			jsonArray.add(obj);
 		}
-		
-		response.getWriter().write(jsonArray.toString());
+		attr.put("roomList", jsonArray);
+		return new Router(null, "write");
 		
 	} // end selectGET
 }

@@ -31,26 +31,27 @@
 	</form>
 
 	<script type="text/javascript">
-		let userId = document.getElementById("userId");
+		let userId = $('#userId');
 		
 		function checkDup(){
+			console.log("checkDup() : " + userId.val());
 			$.ajax({
 				type : "POST",
 				url : "idDupChk.do",
 				data : {
-					"userId" : userId
+					"userId" : userId.val()
 				},
 				success : function(result){
 					console.log(result);
 					let res = JSON.parse(result);
-					if(res.checkedId == 'null'){
+					if(res.checkedId == null){
 						alert("사용 가능한 아이디입니다.");
 					}else{
 						alert("사용할 수 없는 아이디입니다.");
 					}
 				}
 			});
-		}
+		} // end checkDup
 	
 	</script>
 </body>

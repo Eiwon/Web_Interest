@@ -34,7 +34,7 @@
 		}); // end document.ready
 		
 		function refreshRoomList(result){
-			let rooms = JSON.parse(result);
+			let rooms = JSON.parse(result).roomList;
 			let roomsBlock = "";
 			for(x in rooms){
 				roomsBlock += '<div class="room"><div> ID : ' + 
@@ -77,7 +77,7 @@
 					"creatorId" : '<%=session.getAttribute("userId")%>'
 				},
 				success : function(result){
-					let roomId = result;
+					let roomId = JSON.parse(result).roomId;
 					enterRoom(roomId);
 				}
 			}); // end ajax

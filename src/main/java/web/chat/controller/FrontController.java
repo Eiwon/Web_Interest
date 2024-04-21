@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import web.chat.resource.Controller;
+import web.chat.resource.RequestProperty;
 import web.chat.resource.Router;
 
 @WebServlet("*.do")
@@ -25,29 +26,20 @@ public class FrontController extends HttpServlet {
     	ctrMap.put("room", RoomController.getInstance());
     }
 
-    
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String requestURI = request.getRequestURI();
-		String requestMethod = request.getMethod();
-		System.out.println(requestMethod);
-		PathAnalyzer analyzer = PathAnalyzer.getInstance();
-		analyzer.analyze(requestURI, requestMethod);
-		System.out.println(analyzer.getController());
-		System.out.println(analyzer.getAction());
-		System.out.println(analyzer.getMethod());
+		RequestProperty rp = new RequestProperty(request);
+		System.out.println("호출 controller : " + rp.getController());
+		System.out.println("호출 action : " + rp.getAction());
+		System.out.println("호출 method : " + rp.getMethod());
 		
-		//Map<String, String[]> map = new HashMap<>(request.getParameterMap());
-		
-		Controller ctr = ctrMap.get(analyzer.getController());
-		System.out.println(analyzer.getController() + " 컨트롤러 호출");
+		Controller ctr = ctrMap.get(rp.getController());
 		
 		Map<String, Object> attr = new HashMap<>();
-		Router router = ctr.action(analyzer.getAction(), request, response, attr);
+		Router router = ctr.action(rp, attr);
 		router.route(request, response, attr);
 
-		
-	}
+	} // end service
 
 	
 }

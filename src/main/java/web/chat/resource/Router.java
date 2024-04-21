@@ -20,19 +20,15 @@ public class Router {
 		this.path = path;
 		this.type = type;
 	}
-
 	public String getType() {
 		return type;
 	}
-
 	public void setType(String type) {
 		this.type = type;
 	}
-
 	public String getPath() {
 		return path;
 	}
-
 	public void setPath(String path) {
 		this.path = path;
 	}
@@ -85,6 +81,7 @@ public class Router {
 				jsonObj.put(key, attr.get(key));
 			}
 		}
+		System.out.println(jsonObj.toJSONString());
 		try {
 			response.getWriter().write(jsonObj.toJSONString());
 		} catch (IOException e) {

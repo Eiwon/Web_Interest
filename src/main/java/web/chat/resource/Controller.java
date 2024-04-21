@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface Controller {
 	
-	public Router action(String action, HttpServletRequest request, 
-			HttpServletResponse response, Map<String, Object> attr) 
+	public Router action(RequestProperty rp, Map<String, Object> attr) 
 					throws ServletException, IOException;
 }

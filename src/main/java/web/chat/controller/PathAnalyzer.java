@@ -23,15 +23,13 @@ public class PathAnalyzer {
 		this.action = uri[3];
 		this.method = requestMethod;
 	}
-	
+
 	public String getController() {
 		return controller;
 	}
-	
 	public String getAction() {
 		return action;
 	}
-	
 	public String getMethod() {
 		return method;
 	}
